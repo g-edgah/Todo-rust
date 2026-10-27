@@ -8,15 +8,25 @@ fn main() {
 
 #[component]
 fn App() -> impl IntoView {
+
+    let (title, title_writer) = signal(String::new());
+    let (items, items_writer) = signal(Vec::<String>::new());
+
     view! {
-        <main>
+        <main> 
             <div>
                 <div class="list">
                     list of items
-                </div>
+                 </div>
                 <form action="">
-                    <input type="text" />
-                    <button id="submit">Add item</button>
+                    <input type="text" on:input=move|event| {
+                        title_writer.set(event_target_value(&event));
+                    } />
+                    <button id="submit" on:click=move|_| {
+                        items_writer.write().push(title.get())
+                    } >
+                        Add item
+                    </button>
                 </form>
             </div>
         </main> 
