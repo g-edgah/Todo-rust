@@ -8,7 +8,17 @@ fn main() {
 
 #[component]
 fn App() -> impl IntoView {
-    view ! {
-        <main>Hello world</main> 
+    view! {
+        <main>
+            <div>
+                <div class="list">
+                    list of items
+                </div>
+                <form action="">
+                    <input type="text" />
+                    <button id="submit">Add item</button>
+                </form>
+            </div>
+        </main> 
     }
 }

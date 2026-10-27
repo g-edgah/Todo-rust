@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "ToDoApp-rust"
+name = "Todo-rust"
 version = "0.1.0"
 dependencies = [
  "leptos",
