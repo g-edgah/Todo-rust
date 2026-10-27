@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use leptos::web_sys::SubmitEvent;
 
 
 fn main() {
@@ -17,6 +18,7 @@ fn App() -> impl IntoView {
             <div>
                 <div class="list">
                     list of items
+
                     <For
                         each = move ||items.get()
                         key = |item|  item.clone()
@@ -26,19 +28,32 @@ fn App() -> impl IntoView {
                             }
                         }
                     />
-                 </div>
-                <form action="" on:submit=move|_| {
-                        items_writer.write().push(title.get())
-                    }>
+                </div>
+
+                <form 
+                    action="" 
+                    on:submit=move|ev: SubmitEvent| {
+                        ev.prevent_default();
+                        items_writer.write().push(title.get());
+                        title_writer.set(String::new());
+
+                    }
+                >
                     
-                    <input type="text" on:input=move|event| {
+                    <input 
+                        type="text" 
+                        on:input=move|event| {
                         title_writer.set(event_target_value(&event));
-                    } />
+                        } 
+                        prop:value = move || title.get()
+                    />
 
                     <button id="submit" type="submit">
                         Add item
                     </button>
+
                 </form>
+
             </div>
         </main> 
     }
