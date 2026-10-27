@@ -20,11 +20,23 @@ fn App() -> impl IntoView {
                     list of items
 
                     <For
-                        each = move ||items.get()
+                        each = move || items.get()
                         key = |item|  item.clone()
                         children = move |task| { 
+                            let task_to_go = task.clone();
+
                             view! { 
-                                <div>{task}</div>
+                                <div>{task.clone()}</div> <button
+                                    type="button"
+                                    on:click=move |_| {
+                                        items_writer.update(|items| {
+                                            items.retain(|item| item != &task_to_go);
+                                        });
+
+                                    }
+                                >
+                                    Remove
+                                </button>
                             }
                         }
                     />
