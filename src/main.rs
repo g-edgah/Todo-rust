@@ -7,11 +7,20 @@ fn main() {
 }
 
 
+#[derive(Clone)]
+struct Item { 
+    id : u32,
+    title : String
+}
+
+
 #[component]
 fn App() -> impl IntoView {
 
     let (title, title_writer) = signal(String::new());
-    let (items, items_writer) = signal(Vec::<String>::new());
+    let (items, items_writer) = signal(Vec::<Item>::new());
+    let (counter, counter_writer) = signal(0);
+
 
     view! {
         <main> 
@@ -21,19 +30,20 @@ fn App() -> impl IntoView {
 
                     <For
                         each = move || items.get()
-                        key = |item|  item.clone()
-                        children = move |task| { 
-                            let task_to_go = task.clone();
+                        key = |item| item.id
+                        children = move |item| { 
+                            //let task_to_go = item.title;
 
                             view! { 
-                                <div>{task.clone()}</div> <button
-                                    type="button"
-                                    on:click=move |_| {
-                                        items_writer.update(|items| {
-                                            items.retain(|item| item != &task_to_go);
-                                        });
+                                <div>{item.title}</div> 
+                                <button
+                                    // type="button"
+                                    // on:click=move |_| {
+                                    //     items_writer.update(|items| {
+                                    //         items.retain(|item| item.title != &task_to_go);
+                                    //     });
 
-                                    }
+                                    // }
                                 >
                                     Remove
                                 </button>
@@ -46,7 +56,12 @@ fn App() -> impl IntoView {
                     action="" 
                     on:submit=move|ev: SubmitEvent| {
                         ev.prevent_default();
-                        items_writer.write().push(title.get());
+                        counter_writer.set(counter.get() +1);
+
+                        items_writer.write().push(Item {
+                            id : counter.get(),
+                            title : title.get()
+                        });
                         title_writer.set(String::new());
 
                     }
