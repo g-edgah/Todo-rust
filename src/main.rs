@@ -7,17 +7,18 @@ fn main() {
 }
 
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 struct Item { 
     id : u32,
-    title : String
+    title : String,
+    description : String
 }
 
 
 #[component]
 fn App() -> impl IntoView {
 
-    let (title, title_writer) = signal(String::new());
+    let (title, title_writer) = signal(Item::default());
     let (items, items_writer) = signal(Vec::<Item>::new());
     let (counter, counter_writer) = signal(0);
 
@@ -35,15 +36,18 @@ fn App() -> impl IntoView {
                             let task_to_go = item.id;
 
                             view! { 
-                                <div>{item.title}</div> 
+                                <div>
+                                    <span>{item.title}</span>
+                                    <span>{item.description}</span>
+                                </div> 
                                 <button
                                     type="button"
-                                    on:click=move |_| {
+                                    on:click= { move |_| {
                                         items_writer.update(|tasks| {
                                             tasks.retain(|task| task.id != task_to_go);
                                         });
 
-                                    }
+                                    }}
                                 >
                                     Remove
                                 </button>
@@ -53,26 +57,28 @@ fn App() -> impl IntoView {
                 </div>
 
                 <form 
-                    action="" 
-                    on:submit=move|ev: SubmitEvent| {
+                    on:submit = { move|ev: SubmitEvent| {
                         ev.prevent_default();
-                        counter_writer.set(counter.get() +1);
 
                         items_writer.write().push(Item {
                             id : counter.get(),
-                            title : title.get()
+                            title : title.get().title,
+                            description: title.get().description
                         });
-                        title_writer.set(String::new());
 
-                    }
+                        title_writer.set(Item::default());
+
+                        counter_writer.set(counter.get() +1);
+
+                    }}
                 >
                     
                     <input 
-                        type="text" 
-                        on:input=move|event| {
-                        title_writer.set(event_target_value(&event));
-                        } 
-                        prop:value = move || title.get()
+                        type = "text" 
+                        on:input = { move|event| {
+                        title_writer.write().title = event_target_value(&event);
+                        } }
+                        // prop:value = move || title.get()
                     />
 
                     <button id="submit" type="submit">
