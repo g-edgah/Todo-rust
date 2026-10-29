@@ -41,6 +41,7 @@ fn App() -> impl IntoView {
                                     <span>{item.description}</span>
                                 </div> 
                                 <button
+                                    class="bg-blue-500"
                                     type="button"
                                     on:click= { move |_| {
                                         items_writer.update(|tasks| {
