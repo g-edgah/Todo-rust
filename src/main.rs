@@ -32,18 +32,18 @@ fn App() -> impl IntoView {
                         each = move || items.get()
                         key = |item| item.id
                         children = move |item| { 
-                            //let task_to_go = item.title;
+                            let task_to_go = item.id;
 
                             view! { 
                                 <div>{item.title}</div> 
                                 <button
-                                    // type="button"
-                                    // on:click=move |_| {
-                                    //     items_writer.update(|items| {
-                                    //         items.retain(|item| item.title != &task_to_go);
-                                    //     });
+                                    type="button"
+                                    on:click=move |_| {
+                                        items_writer.update(|tasks| {
+                                            tasks.retain(|task| task.id != task_to_go);
+                                        });
 
-                                    // }
+                                    }
                                 >
                                     Remove
                                 </button>
