@@ -78,7 +78,7 @@ fn App() -> impl IntoView {
                         on:input = { move|event| {
                         title_writer.write().title = event_target_value(&event);
                         } }
-                        // prop:value = move || title.get()
+                        prop:value = move || title.get().title
                     />
 
                     <button id="submit" type="submit">
